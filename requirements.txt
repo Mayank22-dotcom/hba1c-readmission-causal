@@ -1,0 +1,9 @@
+# Python 3 (developed and run in Google Colab).
+# Pin exact versions before publishing: see "Dependencies" in README.md.
+numpy
+pandas
+scipy
+matplotlib
+scikit-learn
+statsmodels
+econml

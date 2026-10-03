@@ -1,0 +1,116 @@
+# In-hospital HbA1c measurement and 30-day readmission: a causal ML analysis
+
+Mayank Futnani Arupula (mxa6067@psu.edu) · Mentor: Sisi Shao (UCLA)
+Student 360 Research Scholar Program, 2026 Summer III · Final version, 3 October 2026
+
+**Research question.** Among eligible hospitalized patients with diabetes, how does the estimated
+effect of in-hospital HbA1c measurement on 30-day readmission vary across baseline patient
+characteristics? Observational data from 1999–2008; this is not a contemporary treatment
+recommendation.
+
+> **No raw data in this repository.** See [`data/README.md`](data/README.md) for the official
+> download link and instructions.
+
+## Repository layout
+
+```
+hba1c_analysis_clean_v4.ipynb   Full analysis (57 cells), runs top to bottom
+scripts/make_figures_3_5.py     Draws manuscript Figures 3 and 5 from the saved tables
+requirements.txt                Python dependencies
+data/README.md                  How to obtain diabetic_data.csv (not included)
+results/tables/                 Output tables (CSV) written by the notebook
+results/figures/                Output figures (PNG)
+docs/                           Manuscript, design memo, dated amendment, change summary
+```
+
+## Run order
+
+1. **Get the data.** Download `diabetic_data.csv` as described in `data/README.md`.
+2. **Run the notebook.** Open `hba1c_analysis_clean_v4.ipynb` in Google Colab, upload
+   `diabetic_data.csv` to the working directory, and choose *Runtime → Run all*.
+   - Fixed seed 20260828. The notebook asserts the cohort (69,990 patients, 12,846 tested,
+     6,285 readmitted) before any modelling and stops if these do not match.
+   - It installs `econml` itself (cell 30). Run time is about 15 minutes, mostly the
+     cross-fitted causal forest.
+   - Outputs are written to the working directory, and the last cell zips them into
+     `results.zip` (the raw data are excluded). Download it before the session ends.
+3. **File the outputs.** Unzip `results.zip`; put the `.csv` files in `results/tables/` and the
+   `.png` files in `results/figures/`.
+4. **Draw Figures 3 and 5.** From the repository root: `python scripts/make_figures_3_5.py`.
+   This only plots the saved tables; it recomputes nothing.
+
+## Final specification
+
+- **Cohort (Order A):** exclude death and hospice discharges (codes 11, 13, 14, 19, 20, 21), then
+  take each patient's earliest remaining encounter by `encounter_id`: 69,990 patients.
+- **Treatment:** A = 1 if `A1Cresult` is Norm, >7, or >8; A = 0 if None (file read with
+  `keep_default_na=False`). **Outcome:** `readmitted == "<30"`.
+- **Adjustment set (42 columns):** race, gender, age, admission type, admission source, and
+  prior-year inpatient, outpatient, and emergency visits. The primary diagnosis group was removed
+  after a covariate-timing review (see the dated amendment in `docs/`) and is retained as S4.
+- **Estimation:** cross-fitted AIPW (5-fold GroupKFold by patient), logistic propensity score
+  clipped to [0.01, 0.99], gradient boosting outcome models per arm, influence-function CIs.
+- **Heterogeneity:** `econml` CausalForestDML (500 trees) in an outer 5-fold loop so every patient
+  has an out-of-fold CATE, evaluated against cross-fitted doubly robust scores.
+
+## Headline results
+
+| Quantity | Estimate (95% CI) |
+|---|---|
+| AIPW risk difference (primary) | −0.044 pp (−0.661 to 0.573) |
+| AIPW risk, tested / untested | 8.910% / 8.954% |
+| Sensitivity S1–S4 | −0.069 / −0.050 / −0.007 / −0.174 pp; all CIs include zero |
+| Calibration slope | 0.269 (0.016 to 0.522) |
+| AUTOC | −0.137 pp (−1.067 to 0.793) |
+| Q1 − Q5 contrast | −1.880 pp (−3.998 to 0.238) |
+
+No clear evidence of a nonzero average effect; the interval is compatible with a small benefit
+or a small harm. Heterogeneity findings do not support reliable claims about which patients
+would benefit. Diagnosis-stratified estimates are exploratory and are not causal effect
+modification.
+
+## Outputs and where they appear in the manuscript
+
+| File | Contents | Manuscript |
+|---|---|---|
+| `cohort_flow_v2.csv` | Cohort construction, Order A vs Order B | Table 1 |
+| `covariate_timing_table_v2.csv` | Timing of each variable, included or excluded | §2.3 |
+| `master_table.csv` | N, events, unadjusted, standardized, and AIPW risks by arm | Table 2 |
+| `ate_estimates_v2.csv` | Crude, outcome regression, IPW, AIPW | Table 3 |
+| `sensitivity_analyses.csv` | S1–S4 | Table 4 |
+| `weight_diagnostics.csv`, `ess_by_arm.csv`, `balance_v2.csv` | Weights, ESS, SMDs | §3.2 |
+| `cate_quintiles_oof.csv` | Out-of-fold CATE quintiles | Table 5, Figure 3 |
+| `heterogeneity_summary.csv` | Calibration slope, AUTOC, Q1 − Q5 | Table 6 |
+| `diagnosis_subgroups_v2.csv` | Exploratory diagnosis-stratified estimates | Table 7, Figure 5 |
+| `timeline_v2.png` | Study timeline | Figure 1 |
+| `ps_overlap_v2.png` | Propensity score overlap | Figure 2 |
+| `fig3_calibration_quintiles.png` | Predicted vs observed by quintile | Figure 3 |
+| `toc_curve.png` | TOC from 5% (display restriction) | Figure 4 |
+| `fig5_diagnosis_forest.png` | Diagnosis forest plot | Figure 5 |
+| `toc_curve_full.png` | Complete TOC curve | Appendix Figure A1 |
+
+## Documents (`docs/`)
+
+- `Mayank_Futnani_Arupula_manuscript_v7.docx`: final manuscript.
+- `design_memo_2026-09-10.docx`: original design memo, kept unchanged as a historical record.
+- `design_memo_amendment_2026-10-03.docx`: dated amendment (covariate-timing review, removal of
+  the diagnosis group, addition of S4).
+- `change_summary.docx`: final specification, results, and changes since 11 September.
+
+## Dependencies
+
+Python 3 with the packages in `requirements.txt`. The analysis was run in Google Colab. To record
+exact versions, run this in the same Colab session after the notebook and paste the output into
+`requirements.txt` as `package==version` lines:
+
+```python
+import sys, numpy, pandas, scipy, matplotlib, sklearn, statsmodels, econml
+print(sys.version)
+for m in (numpy, pandas, scipy, matplotlib, sklearn, statsmodels, econml):
+    print(m.__name__, m.__version__)
+```
+
+## Data citation
+
+Clore, J., Cios, K., DeShazo, J., & Strack, B. (2014). *Diabetes 130-US hospitals for years
+1999–2008* [Data set]. UCI Machine Learning Repository. https://doi.org/10.24432/C5230J

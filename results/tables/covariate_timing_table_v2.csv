@@ -1,0 +1,22 @@
+Variable,Domain,Timing,Rationale,Primary set
+age,Demographic,Pre-treatment,Fixed at admission,Included
+race,Demographic,Pre-treatment,Fixed at admission,Included
+gender,Demographic,Pre-treatment,Fixed at admission,Included
+admission_type_id,Baseline severity,Pre-treatment,Recorded at admission,Included
+admission_source_id,Baseline severity,Pre-treatment,Recorded at admission,Included
+diag_group,Ambiguous,Uncertain,diag_1 may be finalised at discharge; sensitivity S4,Excluded
+number_inpatient,Prior utilization,Pre-treatment,Prior-year count,Included
+number_outpatient,Prior utilization,Pre-treatment,Prior-year count,Included
+number_emergency,Prior utilization,Pre-treatment,Prior-year count,Included
+number_diagnoses,Ambiguous,Uncertain,Excluded per mentor instruction,Excluded
+max_glu_serum,Ambiguous,Uncertain,Excluded per mentor instruction,Excluded
+payer_code,Ambiguous,Uncertain,Excluded per mentor instruction,Excluded
+medical_specialty,Ambiguous,Uncertain,Baseline status not verifiable; ~48% missing,Excluded
+change,In-hospital care,Post-treatment,Mediator on A -> M -> Y,Excluded
+time_in_hospital,In-hospital care,Post-treatment,Realized after admission,Excluded
+num_lab_procedures,In-hospital care,Post-treatment,Counts the HbA1c test itself,Excluded
+num_medications,In-hospital care,Post-treatment,In-hospital treatment,Excluded
+num_procedures,In-hospital care,Post-treatment,In-hospital treatment,Excluded
+discharge_disposition_id,Discharge,Post-treatment,Cohort exclusion only,Excluded
+A1Cresult value,Treatment detail,Post-treatment,Exists only if tested,Excluded
+diabetesMed,In-hospital care,Post-treatment,Medication status during stay,Excluded

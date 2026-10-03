@@ -1,0 +1,4 @@
+Quantity,Estimate,CI low,CI high
+Calibration slope,0.2688,0.0157,0.5218
+AUTOC (pp),-0.1373,-1.0671,0.7926
+Q1 - Q5 contrast (pp),-1.88,-3.998,0.238
