@@ -1,0 +1,23 @@
+# Raw data: never commit (licensing and privacy not yet resolved).
+# See data/README.md for how to obtain it.
+diabetic_data.csv
+IDs_mapping.csv
+dataset_diabetes/
+data/*
+!data/README.md
+
+# Archives
+*.zip
+
+# Python / Jupyter
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+.venv/
+venv/
+
+# OS and editor files
+.DS_Store
+Thumbs.db
+~$*
+.~lock.*
