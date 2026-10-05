@@ -15,7 +15,12 @@ recommendation.
 
 ```
 hba1c_analysis_clean_v4.ipynb   Full analysis (57 cells), runs top to bottom
-scripts/make_figures_3_5.py     Draws manuscript Figures 3 and 5 from the saved tables
+scripts/figstyle.py             Shared figure style (fonts, colours, sizes) used by the plotting scripts
+scripts/make_figures_3_5.py     Draws the predicted-vs-observed and diagnosis forest plots (Figures 4 and 6)
+scripts/make_fig_cohort_flow.py Draws the cohort-flow diagram (Figure 2) from the saved tables
+scripts/make_fig_love_plot.py   Draws the covariate-balance (Love) plot (Figure A1) from balance_v2.csv
+scripts/admission_labels.py     Readable labels for admission codes (checked against IDs_mapping.csv if present)
+scripts/make_descriptives.py    Baseline/missing-data tables by arm (NOT YET RUN; needs the raw data)
 requirements.txt                Python dependencies
 data/README.md                  How to obtain diabetic_data.csv (not included)
 results/tables/                 Output tables (CSV) written by the notebook
@@ -36,8 +41,14 @@ docs/                           Manuscript, design memo, dated amendment, change
      `results.zip` (the raw data are excluded). Download it before the session ends.
 3. **File the outputs.** Unzip `results.zip`; put the `.csv` files in `results/tables/` and the
    `.png` files in `results/figures/`.
-4. **Draw Figures 3 and 5.** From the repository root: `python scripts/make_figures_3_5.py`.
-   This only plots the saved tables; it recomputes nothing.
+4. **Draw the figures made by scripts.** From the repository root:
+   `python scripts/make_figures_3_5.py`, `python scripts/make_fig_cohort_flow.py`,
+   `python scripts/make_fig_love_plot.py`. These only plot the saved tables; they recompute
+   nothing. If `IDs_mapping.csv` (from the UCI download) is in the repository root, the Love-plot
+   script also checks the admission-code labels against it.
+5. **Optional, not yet run (ask Sisi first):** `python scripts/make_descriptives.py` rebuilds only
+   the primary cohort (same assertions as the notebook, no models) and writes baseline
+   characteristics, missing-data frequencies and primary diagnosis group by arm.
 
 ## Final specification
 
@@ -71,27 +82,36 @@ modification.
 
 ## Outputs and where they appear in the manuscript
 
-| File | Contents | Manuscript |
+Manuscript numbering below follows v11 (same numbering as v10) (a new Figure 2 and Table 1 were added after v7).
+
+| File | Contents | Manuscript (v11) |
 |---|---|---|
-| `cohort_flow_v2.csv` | Cohort construction, Order A vs Order B | Table 1 |
-| `covariate_timing_table_v2.csv` | Timing of each variable, included or excluded | §2.3 |
-| `master_table.csv` | N, events, unadjusted, standardized, and AIPW risks by arm | Table 2 |
+| `cohort_flow_v2.csv` | Cohort construction, Order A vs Order B | Figure 2 and its note |
+| `covariate_timing_table_v2.csv` | Timing of each variable, included or excluded | Appendix Table A1 |
+| `master_table.csv` | N, events, unadjusted, standardized, and AIPW risks by arm | Table 2, Figure 2 |
 | `ate_estimates_v2.csv` | Crude, outcome regression, IPW, AIPW | Table 3 |
 | `sensitivity_analyses.csv` | S1–S4 | Table 4 |
-| `weight_diagnostics.csv`, `ess_by_arm.csv`, `balance_v2.csv` | Weights, ESS, SMDs | §3.2 |
-| `cate_quintiles_oof.csv` | Out-of-fold CATE quintiles | Table 5, Figure 3 |
+| `weight_diagnostics.csv`, `ess_by_arm.csv` | Weights, ESS | §3.2 |
+| `balance_v2.csv` | SMDs before and after weighting | §3.2, Appendix Figure A1 |
+| `cate_quintiles_oof.csv` | Out-of-fold CATE quintiles | Table 5, Figure 4 |
 | `heterogeneity_summary.csv` | Calibration slope, AUTOC, Q1 − Q5 | Table 6 |
-| `diagnosis_subgroups_v2.csv` | Exploratory diagnosis-stratified estimates | Table 7, Figure 5 |
+| `diagnosis_subgroups_v2.csv` | Exploratory diagnosis-stratified estimates | Table 7, Figure 6 |
 | `timeline_v2.png` | Study timeline | Figure 1 |
-| `ps_overlap_v2.png` | Propensity score overlap | Figure 2 |
-| `fig3_calibration_quintiles.png` | Predicted vs observed by quintile | Figure 3 |
-| `toc_curve.png` | TOC from 5% (display restriction) | Figure 4 |
-| `fig5_diagnosis_forest.png` | Diagnosis forest plot | Figure 5 |
-| `toc_curve_full.png` | Complete TOC curve | Appendix Figure A1 |
+| `fig2_cohort_flow.png` | Cohort flow (scripts/make_fig_cohort_flow.py) | Figure 2 |
+| `ps_overlap_v2.png` | Propensity score overlap | Figure 3 |
+| `fig3_calibration_quintiles.png` | Predicted vs observed by quintile | Figure 4 |
+| `toc_curve.png` | TOC from 5% (display restriction) | Figure 5 |
+| `fig5_diagnosis_forest.png` | Diagnosis forest plot | Figure 6 |
+| `figA1_love_plot.png` | Covariate balance (scripts/make_fig_love_plot.py) | Appendix Figure A1 |
+| `toc_curve_full.png` | Complete TOC curve | Appendix Figure A2 |
+
+Table 1 (target trial specification and emulation) is text only and has no output file.
 
 ## Documents (`docs/`)
 
-- `Mayank_Futnani_Arupula_manuscript_v7.docx`: final manuscript.
+- `Mayank_Futnani_Arupula_manuscript_v11.docx`: final manuscript (v10 content with the final visual design).
+- `Supplementary_File_1_TARGET_checklist.docx`: completed TARGET reporting checklist (Supplementary File 1).
+- `change_list_v7_to_v11.md`: what changed between v7 and v11.
 - `design_memo_2026-09-10.docx`: original design memo, kept unchanged as a historical record.
 - `design_memo_amendment_2026-10-03.docx`: dated amendment (covariate-timing review, removal of
   the diagnosis group, addition of S4).
