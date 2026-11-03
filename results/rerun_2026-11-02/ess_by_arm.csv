@@ -1,0 +1,5 @@
+Weights,Arm,N,ESS,ESS % of N
+Unstabilized,Treated,12846,10423.8,81.1
+Unstabilized,Control,57144,50756.0,88.8
+Stabilized,Treated,12846,10423.8,81.1
+Stabilized,Control,57144,50756.0,88.8

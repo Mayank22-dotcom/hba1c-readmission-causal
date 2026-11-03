@@ -1,7 +1,7 @@
 # In-hospital HbA1c measurement and 30-day readmission: a causal ML analysis
 
 Mayank Futnani Arupula (mxa6067@psu.edu) · Mentor: Sisi Shao (UCLA)
-Student 360 Research Scholar Program, 2026 Summer III · Final version, 3 October 2026
+Student 360 Research Scholar Program, 2026 Summer III · Manuscript submitted 5 October 2026 (v11) · Repository updated 2 November 2026
 
 **Research question.** Among eligible hospitalized patients with diabetes, how does the estimated
 effect of in-hospital HbA1c measurement on 30-day readmission vary across baseline patient
@@ -14,29 +14,35 @@ recommendation.
 ## Repository layout
 
 ```
-hba1c_analysis_clean_v4.ipynb   Full analysis (57 cells), runs top to bottom
+hba1c_analysis_clean_v5.ipynb   Full analysis (59 cells), runs top to bottom; saved with the outputs of the 2 November run
+hba1c_analysis_clean_v4.ipynb   Notebook behind the submitted manuscript (v11), kept unchanged with its September outputs
 scripts/figstyle.py             Shared figure style (fonts, colours, sizes) used by the plotting scripts
 scripts/make_figures_3_5.py     Draws the predicted-vs-observed and diagnosis forest plots (Figures 4 and 6)
 scripts/make_fig_cohort_flow.py Draws the cohort-flow diagram (Figure 2) from the saved tables
 scripts/make_fig_love_plot.py   Draws the covariate-balance (Love) plot (Figure A1) from balance_v2.csv
 scripts/admission_labels.py     Readable labels for admission codes (checked against IDs_mapping.csv if present)
 scripts/make_descriptives.py    Baseline/missing-data tables by arm (NOT YET RUN; needs the raw data)
-requirements.txt                Python dependencies
+requirements.txt                Pinned package versions from a verified run (Python 3.12, 2 November 2026)
+requirements_lock_full.txt      The same environment including every dependency
 data/README.md                  How to obtain diabetic_data.csv (not included)
-results/tables/                 Output tables (CSV) written by the notebook
-results/figures/                Output figures (PNG)
+results/tables/                 Output tables (CSV) behind the submitted manuscript (September run)
+results/figures/                Output figures (PNG) behind the submitted manuscript
+results/rerun_2026-11-02/       All outputs of the 2 November v5 run (see "Corrections and rerun")
 docs/                           Manuscript, design memo, dated amendment, change summary
 ```
 
 ## Run order
 
 1. **Get the data.** Download `diabetic_data.csv` as described in `data/README.md`.
-2. **Run the notebook.** Open `hba1c_analysis_clean_v4.ipynb` in Google Colab, upload
-   `diabetic_data.csv` to the working directory, and choose *Runtime → Run all*.
+2. **Run the notebook.** Create a Python 3.12 environment with `pip install -r requirements.txt`,
+   put `diabetic_data.csv` in the working directory, and run `hba1c_analysis_clean_v5.ipynb` top to
+   bottom. It also runs in Google Colab (*Runtime → Run all*), but Colab's preinstalled versions
+   may differ from `requirements.txt`, and the estimates shift slightly between package versions
+   (see "Corrections and rerun").
    - Fixed seed 20260828. The notebook asserts the cohort (69,990 patients, 12,846 tested,
      6,285 readmitted) before any modelling and stops if these do not match.
-   - It installs `econml` itself (cell 30). Run time is about 15 minutes, mostly the
-     cross-fitted causal forest.
+   - It installs the pinned `econml` itself (cell 30). Run time is 15–30 minutes, mostly the
+     cross-fitted causal forest. The last cell prints the Python and package versions used.
    - Outputs are written to the working directory, and the last cell zips them into
      `results.zip` (the raw data are excluded). Download it before the session ends.
 3. **File the outputs.** Unzip `results.zip`; put the `.csv` files in `results/tables/` and the
@@ -66,18 +72,23 @@ docs/                           Manuscript, design memo, dated amendment, change
 
 ## Headline results
 
+As reported in the submitted manuscript (v11). See "Corrections and rerun" below for the two
+corrected tests and the 2 November rerun.
+
 | Quantity | Estimate (95% CI) |
 |---|---|
 | AIPW risk difference (primary) | −0.044 pp (−0.661 to 0.573) |
 | AIPW risk, tested / untested | 8.910% / 8.954% |
 | Sensitivity S1–S4 | −0.069 / −0.050 / −0.007 / −0.174 pp; all CIs include zero |
-| Calibration slope | 0.269 (0.016 to 0.522) |
+| Calibration slope | 0.269 (0.016 to 0.522); classical SE. With HC3 robust SEs the interval includes zero |
 | AUTOC | −0.137 pp (−1.067 to 0.793) |
 | Q1 − Q5 contrast | −1.880 pp (−3.998 to 0.238) |
+| Joint test across diagnosis groups | Wald χ² = 23.32, df = 8, p = .003 (corrected; v11 reported 23.581) |
 
 No clear evidence of a nonzero average effect; the interval is compatible with a small benefit
-or a small harm. Heterogeneity findings do not support reliable claims about which patients
-would benefit. Diagnosis-stratified estimates are exploratory and are not causal effect
+or a small harm. With robust standard errors the calibration slope does not show a clear
+heterogeneity signal, and heterogeneity findings do not support reliable claims about which
+patients would benefit. Diagnosis-stratified estimates are exploratory and are not causal effect
 modification.
 
 ## Outputs and where they appear in the manuscript
@@ -113,22 +124,38 @@ Table 1 (target trial specification and emulation) is text only and has no outpu
 - `Supplementary_File_1_TARGET_checklist.docx`: completed TARGET reporting checklist (Supplementary File 1).
 - `change_list_v7_to_v11.md`: what changed between v7 and v11.
 - `design_memo_2026-09-10.docx`: original design memo, kept unchanged as a historical record.
-- `design_memo_amendment_2026-10-03.docx`: dated amendment (covariate-timing review, removal of
-  the diagnosis group, addition of S4).
-- `change_summary.docx`: final specification, results, and changes since 11 September.
+- `design_memo_amendment_2026-10-03.docx`: first dated amendment (covariate-timing review, removal
+  of the diagnosis group, addition of S4), kept unchanged.
+- `design_memo_amendment_2026-11-02.docx`: second dated amendment (status of S1–S3, the corrected
+  joint test and calibration interval, and the 2 November rerun).
+- `change_summary_2026-11-02.docx`: specification, results, and all changes, updated 2 November.
+- `change_summary.docx`: the 3 October version, kept unchanged.
 
 ## Dependencies
 
-Python 3 with the packages in `requirements.txt`. The analysis was run in Google Colab. To record
-exact versions, run this in the same Colab session after the notebook and paste the output into
-`requirements.txt` as `package==version` lines:
+Python 3.12 with the versions pinned in `requirements.txt` (numpy 2.3.5, scipy 1.16.3, pandas 2.2.2,
+scikit-learn 1.6.1, statsmodels 0.14.5, matplotlib 3.10.7, econml 0.16.0).
+`requirements_lock_full.txt` lists every dependency of that environment. The v5 notebook ran top to
+bottom with these versions on 2 November 2026; its last cell prints the versions used.
 
-```python
-import sys, numpy, pandas, scipy, matplotlib, sklearn, statsmodels, econml
-print(sys.version)
-for m in (numpy, pandas, scipy, matplotlib, sklearn, statsmodels, econml):
-    print(m.__name__, m.__version__)
-```
+## Corrections and rerun (2 November 2026)
+
+After submission, the mentor review identified two statistical points. The submitted manuscript
+(v11) is unchanged; corrections go into a new dated version.
+
+- **Joint test across diagnosis groups.** v4 centred each group on the overall mean DR score, which
+  is not a valid test of equality. v5 uses a joint Wald test of equality (8 contrasts; diagonal
+  covariance because the groups contain different patients). From the published Table 7 estimates,
+  χ² = 23.32, df = 8, p = .003 (v11: 23.581). Conclusion unchanged.
+- **Calibration-slope interval.** v5 uses HC3 robust standard errors, about 15% larger than the
+  classical ones. The interval includes zero (rerun: 0.214, −0.070 to 0.498; approximately −0.02 to
+  0.56 for the published slope), so the slope no longer supports a heterogeneity signal.
+- **Rerun.** `np.trapz` (removed in NumPy 2.4) was replaced and the notebook rerun in the pinned
+  environment. The September outputs could not be reproduced exactly, because the package versions
+  used in September were not recorded and the model fits shift slightly between releases. In the
+  rerun the primary AIPW estimate is −0.082 pp (−0.696 to 0.532) instead of −0.044 pp; all other
+  conclusions are unchanged. Outputs are in `results/rerun_2026-11-02/`.
+- **Wording.** S1–S3 are no longer described as prespecified (see the second dated amendment).
 
 ## Data citation
 

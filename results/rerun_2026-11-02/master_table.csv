@@ -1,0 +1,10 @@
+Quantity,Tested (A=1),Untested (A=0)
+N,12846,57144
+Outcome events,1079,5206
+Unadjusted 30-day risk (%),8.4,9.11
+Outcome-model standardized risk (%),8.884,9.018
+AIPW marginal risk (%),8.895,8.977
+AIPW marginal risk 95% CI low (%),8.327,8.74
+AIPW marginal risk 95% CI high (%),9.462,9.214
+AIPW risk difference (pp),-0.082,
+AIPW RD 95% CI (pp),-0.696 to 0.532,

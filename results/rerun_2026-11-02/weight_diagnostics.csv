@@ -1,0 +1,5 @@
+Weights,Arm,Mean,p50,p75,p90,p95,p99,Max
+Unstabilized,Treated,5.419,4.876,6.064,8.579,10.582,14.288,34.744
+Unstabilized,Control,1.227,1.211,1.281,1.368,1.444,1.627,100.0
+Stabilized,Treated,0.995,0.895,1.113,1.575,1.942,2.622,6.377
+Stabilized,Control,1.002,0.989,1.046,1.117,1.179,1.328,81.646

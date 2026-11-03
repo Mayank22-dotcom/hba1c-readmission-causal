@@ -1,9 +1,10 @@
-# Python 3 (developed and run in Google Colab).
-# Pin exact versions before publishing: see "Dependencies" in README.md.
-numpy
-pandas
-scipy
-matplotlib
-scikit-learn
-statsmodels
-econml
+# Environment verified on 2 November 2026: hba1c_analysis_clean_v5.ipynb runs top to bottom
+# and produces the v5 outputs with these versions.
+# Python 3.12.3
+numpy==2.3.5
+scipy==1.16.3
+pandas==2.2.2
+scikit-learn==1.6.1
+statsmodels==0.14.5
+matplotlib==3.10.7
+econml==0.16.0

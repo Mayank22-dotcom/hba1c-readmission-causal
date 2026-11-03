@@ -1,0 +1,5 @@
+Estimator,RD_pp,CI_low,CI_high
+Crude,-0.711,,
+Outcome regression,-0.134,,
+IPW (stabilized),0.013,,
+AIPW,-0.082,-0.696,0.532

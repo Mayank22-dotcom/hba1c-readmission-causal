@@ -1,0 +1,6 @@
+Analysis,RD (pp),CI low,CI high
+"Primary (Order A, clip 0.01)",-0.082,-0.696,0.532
+S1: Order B cohort,-0.087,-0.71,0.536
+"S2: clip at [0.05, 0.95]",-0.08,-0.688,0.527
+S3: restricted to overlap (n=68891),-0.048,-0.651,0.555
+S4: adjusting for diagnosis group,-0.215,-0.836,0.406
