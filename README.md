@@ -3,6 +3,8 @@
 Mayank Futnani Arupula (mxa6067@psu.edu) · Mentor: Sisi Shao (UCLA)
 Student 360 Research Scholar Program, 2026 Summer III · Manuscript submitted 5 October 2026 (v11) · Repository updated 2 November 2026
 
+**[Read the paper (PDF)](docs/Mayank_Futnani_Arupula_manuscript_v11.pdf)** · [Word version](docs/Mayank_Futnani_Arupula_manuscript_v11.docx) · [TARGET reporting checklist](docs/Supplementary_File_1_TARGET_checklist.docx)
+
 **Research question.** Among eligible hospitalized patients with diabetes, how does the estimated
 effect of in-hospital HbA1c measurement on 30-day readmission vary across baseline patient
 characteristics? Observational data from 1999–2008; this is not a contemporary treatment
